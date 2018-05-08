@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_C
-  "/home/guy/afl/afl/afl-as.c" "/home/guy/afl/afl/cmake-build-debug/CMakeFiles/afl-as.dir/afl-as.c.o"
+  "/home/guy/Projects/afl_mod/afl-as.c" "/home/guy/Projects/afl_mod/cmake-build-debug/CMakeFiles/afl-as.dir/afl-as.c.o"
   )
 set(CMAKE_C_COMPILER_ID "GNU")
 

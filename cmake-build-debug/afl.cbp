@@ -8,38 +8,38 @@
 		<Option virtualFolders="CMake Files\;"/>
 		<Build>
 			<Target title="all">
-				<Option working_dir="/home/guy/afl/afl/cmake-build-debug"/>
+				<Option working_dir="/home/guy/Projects/afl_mod/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/guy/afl/afl/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/guy/afl/afl/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/home/guy/afl/afl/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/home/guy/afl/afl/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/guy/Projects/afl_mod/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/guy/Projects/afl_mod/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/guy/Projects/afl_mod/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/guy/Projects/afl_mod/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="rebuild_cache">
-				<Option working_dir="/home/guy/afl/afl/cmake-build-debug"/>
+				<Option working_dir="/home/guy/Projects/afl_mod/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/guy/afl/afl/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/guy/afl/afl/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/home/guy/afl/afl/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/home/guy/afl/afl/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/guy/Projects/afl_mod/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/guy/Projects/afl_mod/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/guy/Projects/afl_mod/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/guy/Projects/afl_mod/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="edit_cache">
-				<Option working_dir="/home/guy/afl/afl/cmake-build-debug"/>
+				<Option working_dir="/home/guy/Projects/afl_mod/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/guy/afl/afl/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/guy/afl/afl/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/home/guy/afl/afl/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/home/guy/afl/afl/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/guy/Projects/afl_mod/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/guy/Projects/afl_mod/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/guy/Projects/afl_mod/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/guy/Projects/afl_mod/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="afl-as">
-				<Option output="/home/guy/afl/afl/cmake-build-debug/afl-as" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/guy/afl/afl/cmake-build-debug"/>
+				<Option output="/home/guy/Projects/afl_mod/cmake-build-debug/afl-as" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/guy/Projects/afl_mod/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
@@ -54,15 +54,15 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/guy/afl/afl/cmake-build-debug/Makefile&quot;  VERBOSE=1 afl-as"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/guy/afl/afl/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/home/guy/afl/afl/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/home/guy/afl/afl/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/guy/Projects/afl_mod/cmake-build-debug/Makefile&quot;  VERBOSE=1 afl-as"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/guy/Projects/afl_mod/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/guy/Projects/afl_mod/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/guy/Projects/afl_mod/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="afl-as/fast">
-				<Option output="/home/guy/afl/afl/cmake-build-debug/afl-as" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/guy/afl/afl/cmake-build-debug"/>
+				<Option output="/home/guy/Projects/afl_mod/cmake-build-debug/afl-as" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/guy/Projects/afl_mod/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
@@ -77,20 +77,20 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/guy/afl/afl/cmake-build-debug/Makefile&quot;  VERBOSE=1 afl-as/fast"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/guy/afl/afl/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/home/guy/afl/afl/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/home/guy/afl/afl/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/guy/Projects/afl_mod/cmake-build-debug/Makefile&quot;  VERBOSE=1 afl-as/fast"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/guy/Projects/afl_mod/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/guy/Projects/afl_mod/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/guy/Projects/afl_mod/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/home/guy/afl/afl/afl-as.c">
+		<Unit filename="/home/guy/Projects/afl_mod/afl-as.c">
 			<Option target="afl-as"/>
 		</Unit>
-		<Unit filename="/home/guy/afl/afl/afl-as.h">
+		<Unit filename="/home/guy/Projects/afl_mod/afl-as.h">
 			<Option target="afl-as"/>
 		</Unit>
-		<Unit filename="/home/guy/afl/afl/CMakeLists.txt">
+		<Unit filename="/home/guy/Projects/afl_mod/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>
 	</Project>

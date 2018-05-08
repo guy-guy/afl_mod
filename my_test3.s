@@ -1,4 +1,4 @@
-	.file	"my_test2.c"
+	.file	"my_test3.c"
 	.text
 .Ltext0:
 	.section	.rodata.str1.1,"aMS",@progbits,1
@@ -20,8 +20,8 @@
 	.type	main, @function
 main:
 .LFB49:
-	.file 1 "my_test2.c"
-	.loc 1 9 0
+	.file 1 "my_test3.c"
+	.loc 1 10 0
 	.cfi_startproc
 .LVL0:
 	subq	$24, %rsp
@@ -37,7 +37,7 @@ main:
 .LVL2:
 .LBE11:
 .LBE10:
-	.loc 1 9 0
+	.loc 1 10 0
 	movq	%fs:40, %rax
 	movq	%rax, 8(%rsp)
 	xorl	%eax, %eax
@@ -49,11 +49,13 @@ main:
 .LVL4:
 .LBE12:
 .LBE13:
-	.loc 1 13 0
+	.loc 1 14 0
 	testq	%rax, %rax
 	jle	.L8
-	.loc 1 19 0
-	cmpl	$825373492, 4(%rsp)
+	.loc 1 20 0
+	movl	4(%rsp), %eax
+	sarl	$8, %eax
+	cmpl	$1193046, %eax
 	je	.L9
 .LVL5:
 .LBB14:
@@ -68,7 +70,7 @@ main:
 .L4:
 .LBE15:
 .LBE14:
-	.loc 1 25 0
+	.loc 1 26 0
 	xorl	%edi, %edi
 	call	exit
 .LVL7:
@@ -93,7 +95,7 @@ main:
 .LVL10:
 .LBE19:
 .LBE18:
-	.loc 1 15 0
+	.loc 1 16 0
 	movl	$1, %edi
 	call	exit
 .LVL11:
@@ -486,7 +488,7 @@ main:
 	.uleb128 0x12
 	.long	.LASF69
 	.byte	0x1
-	.byte	0x9
+	.byte	0xa
 	.long	0x5e
 	.quad	.LFB49
 	.quad	.LFE49-.LFB49
@@ -496,19 +498,19 @@ main:
 	.uleb128 0x13
 	.long	.LASF56
 	.byte	0x1
-	.byte	0x9
+	.byte	0xa
 	.long	0x5e
 	.long	.LLST0
 	.uleb128 0x13
 	.long	.LASF57
 	.byte	0x1
-	.byte	0x9
+	.byte	0xa
 	.long	0x493
 	.long	.LLST1
 	.uleb128 0x14
 	.string	"x"
 	.byte	0x1
-	.byte	0xb
+	.byte	0xc
 	.long	0x5e
 	.uleb128 0x2
 	.byte	0x91
@@ -518,7 +520,7 @@ main:
 	.quad	.LBB10
 	.long	.Ldebug_ranges0+0
 	.byte	0x1
-	.byte	0xd
+	.byte	0xe
 	.long	0x39e
 	.uleb128 0x16
 	.long	0x2d4
@@ -555,7 +557,7 @@ main:
 	.quad	.LBB14
 	.quad	.LBE14-.LBB14
 	.byte	0x1
-	.byte	0x16
+	.byte	0x17
 	.long	0x3e3
 	.uleb128 0x16
 	.long	0x2f0
@@ -581,7 +583,7 @@ main:
 	.quad	.LBB16
 	.quad	.LBE16-.LBB16
 	.byte	0x1
-	.byte	0x14
+	.byte	0x15
 	.long	0x428
 	.uleb128 0x16
 	.long	0x2f0
@@ -607,7 +609,7 @@ main:
 	.quad	.LBB18
 	.quad	.LBE18-.LBB18
 	.byte	0x1
-	.byte	0xe
+	.byte	0xf
 	.long	0x468
 	.uleb128 0x16
 	.long	0x2f0
@@ -1212,8 +1214,6 @@ main:
 	.section	.debug_line,"",@progbits
 .Ldebug_line0:
 	.section	.debug_str,"MS",@progbits,1
-.LASF66:
-	.string	"my_test2.c"
 .LASF62:
 	.string	"__builtin_puts"
 .LASF42:
@@ -1344,6 +1344,8 @@ main:
 	.string	"_IO_read_base"
 .LASF31:
 	.string	"_vtable_offset"
+.LASF66:
+	.string	"my_test3.c"
 .LASF22:
 	.string	"_IO_save_base"
 .LASF61:

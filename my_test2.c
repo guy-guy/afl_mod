@@ -16,7 +16,7 @@ int main(int argc, char** argv) {
   }
 
 
-  if(x == 0x12345678) {
+  if(x == 0x31323334) {
     printf("Magic!!");
   } else{
     printf("Sorry!");

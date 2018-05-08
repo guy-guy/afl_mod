@@ -66,6 +66,14 @@ static u8   be_quiet,           /* Quiet mode (no stderr output)        */
 static u32  inst_ratio = 100,   /* Instrumentation probability (%)      */
             as_par_cnt = 1;     /* Number of params to 'as'             */
 
+
+static char* instr_push_eax = "\tpushq\t%rax\n\0";
+static char* instr_pop_eax = "\tpopq\t%rax\n\0";
+static char* instr_right_shift = "\tsarl\t$8, %eax\n\0";
+static char instr_cmpb[MAX_LINE];
+static char instr_movl[MAX_LINE];
+static char instr_jnz[MAX_LINE];
+
 /* If we don't find --32 or --64 in the command line, default to 
    instrumentation for whichever mode we were compiled with. This is not
    perfect, but should do the trick for almost all use cases. */
@@ -83,6 +91,64 @@ static u8   use_64bit = 0;
 #endif /* __APPLE__ */
 
 #endif /* ^__x86_64__ */
+
+static void instr_movl_mod(char* instr_movl_l, char* reg_l)
+{
+  int flag = strstr(reg_l,"(%rsp)") - reg_l;
+  if(flag != NULL)
+  {
+    int value = 0;
+    char tmp_reg[10];
+    if(flag != 0)
+    {
+      sscanf(reg_l,"%d%s",&value,tmp_reg);
+      sprintf(reg_l,"%d%s",value+8,tmp_reg);
+    }
+    if(flag == 0)
+    {
+      sscanf(reg_l,"%s",tmp_reg);
+      sprintf(reg_l,"%d%s",8,tmp_reg);
+    }
+  }
+  instr_movl_l[0] = '\0';
+  strcat(instr_movl_l,"\t");
+  strcat(instr_movl_l,"movl\t");
+  strcat(instr_movl_l,reg_l);
+  strcat(instr_movl_l,", %eax");
+  strcat(instr_movl_l,"\n\0");
+}
+
+
+
+
+static void instr_cmpb_mod(char* instr_cmpb_l, u_int8_t imm_l)
+{
+  instr_cmpb_l[0] = '\0';
+  strcat(instr_cmpb_l,"\t");
+  char imm_char[10];
+  sprintf(imm_char,"%d",imm_l);
+  strcat(instr_cmpb_l,"cmpb\t$");
+  strcat(instr_cmpb_l,imm_char);
+  strcat(instr_cmpb_l,", %al");
+  strcat(instr_cmpb_l,"\n\0");
+}
+
+static void instr_jne_mod(char* instr_jne_l, char* ne_flag_l)
+{
+  instr_jne_l[0] = '\0';
+  strcat(instr_jne_l,"\t");
+  char flag[20] = {0};
+  int flag_index = 0;
+  int ne_flag_index = 0;
+  while(ne_flag_l[ne_flag_index] != ':'){
+    flag[flag_index] = ne_flag_l[ne_flag_index];
+    flag_index++;
+    ne_flag_index++;
+  }
+  strcat(instr_jne_l,"jne\t");
+  strcat(instr_jne_l,flag);
+  strcat(instr_jne_l,"\n\0");
+}
 
 
 /* Examine and modify parameters to pass to 'as'. Note that the file name
@@ -225,7 +291,7 @@ static void mod_cmp(void) {
   FILE* inf;
   FILE* outf;
   s32 outfd;
-
+  int random_flag = 1000;
 
 //!!guyguy!! input_file是原始的待编译的文件；
 // modified_file是插装后的文件
@@ -254,11 +320,15 @@ static void mod_cmp(void) {
       if (line[1] == 'c' && line[2] == 'm' && line[3] == 'p' &&line[4] == 'l') {
         //对CMP指令进行修改
         printf("this is the line to be modified: %s", line);
-        char imm_buf[1024] = {0};
-        char reg_buf[1024] = {0};
+
+        char imm_buf[1024] = {0};//用于保存立即数的值
+        char reg_buf[1024] = {0};//用于保存寄存器的值
+        char e_flag_buf[1024] = {0};//用于保存相等分支跳转目标的值
+        char ne_flag_buf[1024] = {0};//用于保存不相等分支跳转目标的值
+
         //下面是处理立即数与寄存器值作比较的情况
         if(line[6] == '$'){
-          int index_line = 7,index_imm = 0,index_reg = 0;
+          int index_line = 7,index_imm = 0,index_reg = 0,index_flag = 0;
           while(line[index_line] != ',')
           {
             imm_buf[index_imm] = line[index_line];
@@ -275,7 +345,9 @@ static void mod_cmp(void) {
           printf("%s",imm_buf);
 
           while(line[index_line] == ' ' || line[index_line] == '\t' || line[index_line] == ',')
+          {
             index_line++;
+          }
           while(line[index_line] != '\n')
           {
             reg_buf[index_reg] = line[index_line];
@@ -284,14 +356,118 @@ static void mod_cmp(void) {
           }
           reg_buf[index_reg] = '\0';
           printf("%s",reg_buf);
+          //接下来根据下一条执行
+          u8 line_cmp[MAX_LINE] = {0};
+          for(int i = 0; i < MAX_LINE; i++)
+          {
+            line_cmp[i] = line[i];
+          }
+          fgets(line, MAX_LINE, inf);
+
+          //如果下一条指令不是je或者jne则不做处理
+          if(line[0] != '\t' || line[1] != 'j')
+          {
+            fputs(line_cmp, outf);
+            fputs(line, outf);
+            continue;
+          }
+
+          //如果下一指令为je
+          else if(line[0] == '\t' && line[1] == 'j' && line[2] == 'e')
+          {
+            printf("%s",line);
+            if(line[3] == '\t')
+            {
+              index_line = 4;
+              index_flag = 0;
+              while(line[index_line] != '\n')
+              {
+                e_flag_buf[index_flag] = line[index_line];
+                index_flag++;
+                index_line++;
+              }
+              e_flag_buf[index_flag] = ':';
+              index_flag++;
+              e_flag_buf[index_flag] = '\n';
+            }
+            fputs(instr_push_eax,outf);
+            instr_movl_mod(instr_movl,reg_buf);
+            fputs(instr_movl,outf);
+            instr_cmpb_mod(instr_cmpb,imm_1byte);
+            fputs(instr_cmpb,outf);
+            fputs(line,outf);
+
+            fgets(line, MAX_LINE, inf);
+
+
+            //查看下一行是否为一个标签
+            if(line[0] == '.' && line[1] == 'L' &&  '0' <= line[2] && line[2] <= '9')
+            {
+              index_line = 0;
+              index_flag = 0;
+              while(line[index_line] != '\0')
+              {
+                ne_flag_buf[index_flag] = line[index_line];
+                index_flag++;
+                index_line++;
+              }
+              fputs(ne_flag_buf,outf);
+              fputs(instr_pop_eax,outf);
+            }
+            else
+            {
+              char random_flag_char[10];
+              sprintf(random_flag_char,"%d",random_flag++);
+              ne_flag_buf[0] = '.';
+              strcat(ne_flag_buf, "L");
+              strcat(ne_flag_buf,random_flag_char);
+              strcat(ne_flag_buf,":\n\0");
+              fputs(ne_flag_buf,outf);
+              fputs(instr_pop_eax,outf);
+              fputs(line,outf);
+            }
+
+
+            while(fgets(line, MAX_LINE, inf))
+            {
+               if(strcmp(line,e_flag_buf) == 0)
+               {
+                 fputs(line,outf);
+                 fputs(instr_right_shift,outf);
+                 instr_cmpb_mod(instr_cmpb,imm_2byte);
+                 fputs(instr_cmpb,outf);
+                 instr_jne_mod(instr_jnz,ne_flag_buf);
+                 fputs(instr_jnz,outf);
+                 fputs(instr_right_shift,outf);
+                 instr_cmpb_mod(instr_cmpb,imm_3byte);
+                 fputs(instr_cmpb,outf);
+                 instr_jne_mod(instr_jnz,ne_flag_buf);
+                 fputs(instr_jnz,outf);fputs(instr_right_shift,outf);
+                 instr_cmpb_mod(instr_cmpb,imm_4byte);
+                 fputs(instr_cmpb,outf);
+                 instr_jne_mod(instr_jnz,ne_flag_buf);
+                 fputs(instr_jnz,outf);
+                 fputs(instr_pop_eax,outf);
+                 fgets(line, MAX_LINE, inf);
+                 break;
+               }
+               else
+               {
+                  fputs(line,outf);
+               }
+            }
+          }
+
+          //如果下一指令为jne
+          else if(line[0] == '\t' && line[1] == 'j' && line[2] == 'n' && line[3] == 'e')
+          {
+
+          }
         }
       }
     }
     fputs(line, outf);
-
   }
-
-
   if (input_file) fclose(inf);
   fclose(outf);
 }

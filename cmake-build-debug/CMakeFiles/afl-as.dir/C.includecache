@@ -6,17 +6,17 @@
 
 #IncludeRegexTransform: 
 
-/home/guy/afl/afl/afl-as.c
+/home/guy/Projects/afl_mod/afl-as.c
 config.h
-/home/guy/afl/afl/config.h
+/home/guy/Projects/afl_mod/config.h
 types.h
-/home/guy/afl/afl/types.h
+/home/guy/Projects/afl_mod/types.h
 debug.h
-/home/guy/afl/afl/debug.h
+/home/guy/Projects/afl_mod/debug.h
 alloc-inl.h
-/home/guy/afl/afl/alloc-inl.h
+/home/guy/Projects/afl_mod/alloc-inl.h
 afl-as.h
-/home/guy/afl/afl/afl-as.h
+/home/guy/Projects/afl_mod/afl-as.h
 stdio.h
 -
 unistd.h
@@ -36,13 +36,13 @@ sys/wait.h
 sys/time.h
 -
 
-/home/guy/afl/afl/afl-as.h
+/home/guy/Projects/afl_mod/afl-as.h
 config.h
-/home/guy/afl/afl/config.h
+/home/guy/Projects/afl_mod/config.h
 types.h
-/home/guy/afl/afl/types.h
+/home/guy/Projects/afl_mod/types.h
 
-/home/guy/afl/afl/alloc-inl.h
+/home/guy/Projects/afl_mod/alloc-inl.h
 stdio.h
 -
 stdlib.h
@@ -50,25 +50,25 @@ stdlib.h
 string.h
 -
 config.h
-/home/guy/afl/afl/config.h
+/home/guy/Projects/afl_mod/config.h
 types.h
-/home/guy/afl/afl/types.h
+/home/guy/Projects/afl_mod/types.h
 debug.h
-/home/guy/afl/afl/debug.h
+/home/guy/Projects/afl_mod/debug.h
 
-/home/guy/afl/afl/config.h
+/home/guy/Projects/afl_mod/config.h
 types.h
-/home/guy/afl/afl/types.h
+/home/guy/Projects/afl_mod/types.h
 
-/home/guy/afl/afl/debug.h
+/home/guy/Projects/afl_mod/debug.h
 errno.h
 -
 types.h
-/home/guy/afl/afl/types.h
+/home/guy/Projects/afl_mod/types.h
 config.h
-/home/guy/afl/afl/config.h
+/home/guy/Projects/afl_mod/config.h
 
-/home/guy/afl/afl/types.h
+/home/guy/Projects/afl_mod/types.h
 stdint.h
 -
 stdlib.h
