@@ -1984,10 +1984,12 @@ EXP_ST void init_forkserver(char** argv) {
 
   if (pipe(st_pipe) || pipe(ctl_pipe)) PFATAL("pipe() failed");
 
-  forksrv_pid = fork();
+  forksrv_pid = fork(); //由主进程创建一个fork_server子进程
 
   if (forksrv_pid < 0) PFATAL("fork() failed");
 
+
+    //子进程，fork_server的工作
   if (!forksrv_pid) {
 
     struct rlimit r;
@@ -2032,7 +2034,7 @@ EXP_ST void init_forkserver(char** argv) {
 
     /* Isolate the process and configure standard descriptors. If out_file is
        specified, stdin is /dev/null; otherwise, out_fd is cloned instead. */
-
+    //此处做的事情是将fork_server的标准通道全部关闭，从而实现隔离
     setsid();
 
     dup2(dev_null_fd, 1);
@@ -4993,7 +4995,7 @@ static u8 fuzz_one(char** argv) {
     fflush(stdout);
   }
 
-  /* Map the test case into memory. */
+  /* ！！！Map the test case into memory. */
 
   fd = open(queue_cur->fname, O_RDONLY);
 

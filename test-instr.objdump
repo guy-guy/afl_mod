@@ -1,0 +1,358 @@
+
+test-instr.o:     file format elf64-x86-64
+
+
+Disassembly of section .text:
+
+0000000000000000 <__afl_maybe_log>:
+   0:	9f                   	lahf   
+   1:	0f 90 c0             	seto   %al
+   4:	48 8b 15 00 00 00 00 	mov    0x0(%rip),%rdx        # b <__afl_maybe_log+0xb>
+   b:	48 85 d2             	test   %rdx,%rdx
+   e:	74 20                	je     30 <__afl_setup>
+
+0000000000000010 <__afl_store>:
+  10:	48 33 0d 00 00 00 00 	xor    0x0(%rip),%rcx        # 17 <__afl_store+0x7>
+  17:	48 31 0d 00 00 00 00 	xor    %rcx,0x0(%rip)        # 1e <__afl_store+0xe>
+  1e:	48 d1 2d 00 00 00 00 	shrq   0x0(%rip)        # 25 <__afl_store+0x15>
+  25:	fe 04 0a             	incb   (%rdx,%rcx,1)
+
+0000000000000028 <__afl_return>:
+  28:	04 7f                	add    $0x7f,%al
+  2a:	9e                   	sahf   
+  2b:	c3                   	retq   
+  2c:	0f 1f 40 00          	nopl   0x0(%rax)
+
+0000000000000030 <__afl_setup>:
+  30:	80 3d 00 00 00 00 00 	cmpb   $0x0,0x0(%rip)        # 37 <__afl_setup+0x7>
+  37:	75 ef                	jne    28 <__afl_return>
+  39:	48 8b 15 00 00 00 00 	mov    0x0(%rip),%rdx        # 40 <__afl_setup+0x10>
+  40:	48 8b 12             	mov    (%rdx),%rdx
+  43:	48 85 d2             	test   %rdx,%rdx
+  46:	74 09                	je     51 <__afl_setup_first>
+  48:	48 89 15 00 00 00 00 	mov    %rdx,0x0(%rip)        # 4f <__afl_setup+0x1f>
+  4f:	eb bf                	jmp    10 <__afl_store>
+
+0000000000000051 <__afl_setup_first>:
+  51:	48 8d a4 24 a0 fe ff 	lea    -0x160(%rsp),%rsp
+  58:	ff 
+  59:	48 89 04 24          	mov    %rax,(%rsp)
+  5d:	48 89 4c 24 08       	mov    %rcx,0x8(%rsp)
+  62:	48 89 7c 24 10       	mov    %rdi,0x10(%rsp)
+  67:	48 89 74 24 20       	mov    %rsi,0x20(%rsp)
+  6c:	4c 89 44 24 28       	mov    %r8,0x28(%rsp)
+  71:	4c 89 4c 24 30       	mov    %r9,0x30(%rsp)
+  76:	4c 89 54 24 38       	mov    %r10,0x38(%rsp)
+  7b:	4c 89 5c 24 40       	mov    %r11,0x40(%rsp)
+  80:	66 0f d6 44 24 60    	movq   %xmm0,0x60(%rsp)
+  86:	66 0f d6 4c 24 70    	movq   %xmm1,0x70(%rsp)
+  8c:	66 0f d6 94 24 80 00 	movq   %xmm2,0x80(%rsp)
+  93:	00 00 
+  95:	66 0f d6 9c 24 90 00 	movq   %xmm3,0x90(%rsp)
+  9c:	00 00 
+  9e:	66 0f d6 a4 24 a0 00 	movq   %xmm4,0xa0(%rsp)
+  a5:	00 00 
+  a7:	66 0f d6 ac 24 b0 00 	movq   %xmm5,0xb0(%rsp)
+  ae:	00 00 
+  b0:	66 0f d6 b4 24 c0 00 	movq   %xmm6,0xc0(%rsp)
+  b7:	00 00 
+  b9:	66 0f d6 bc 24 d0 00 	movq   %xmm7,0xd0(%rsp)
+  c0:	00 00 
+  c2:	66 44 0f d6 84 24 e0 	movq   %xmm8,0xe0(%rsp)
+  c9:	00 00 00 
+  cc:	66 44 0f d6 8c 24 f0 	movq   %xmm9,0xf0(%rsp)
+  d3:	00 00 00 
+  d6:	66 44 0f d6 94 24 00 	movq   %xmm10,0x100(%rsp)
+  dd:	01 00 00 
+  e0:	66 44 0f d6 9c 24 10 	movq   %xmm11,0x110(%rsp)
+  e7:	01 00 00 
+  ea:	66 44 0f d6 a4 24 20 	movq   %xmm12,0x120(%rsp)
+  f1:	01 00 00 
+  f4:	66 44 0f d6 ac 24 30 	movq   %xmm13,0x130(%rsp)
+  fb:	01 00 00 
+  fe:	66 44 0f d6 b4 24 40 	movq   %xmm14,0x140(%rsp)
+ 105:	01 00 00 
+ 108:	66 44 0f d6 bc 24 50 	movq   %xmm15,0x150(%rsp)
+ 10f:	01 00 00 
+ 112:	41 54                	push   %r12
+ 114:	49 89 e4             	mov    %rsp,%r12
+ 117:	48 83 ec 10          	sub    $0x10,%rsp
+ 11b:	48 83 e4 f0          	and    $0xfffffffffffffff0,%rsp
+ 11f:	48 8d 3d c1 02 00 00 	lea    0x2c1(%rip),%rdi        # 3e7 <.AFL_SHM_ENV>
+ 126:	e8 00 00 00 00       	callq  12b <__afl_setup_first+0xda>
+ 12b:	48 85 c0             	test   %rax,%rax
+ 12e:	0f 84 e2 01 00 00    	je     316 <__afl_setup_abort>
+ 134:	48 89 c7             	mov    %rax,%rdi
+ 137:	e8 00 00 00 00       	callq  13c <__afl_setup_first+0xeb>
+ 13c:	48 31 d2             	xor    %rdx,%rdx
+ 13f:	48 31 f6             	xor    %rsi,%rsi
+ 142:	48 89 c7             	mov    %rax,%rdi
+ 145:	e8 00 00 00 00       	callq  14a <__afl_setup_first+0xf9>
+ 14a:	48 83 f8 ff          	cmp    $0xffffffffffffffff,%rax
+ 14e:	0f 84 c2 01 00 00    	je     316 <__afl_setup_abort>
+ 154:	48 89 c2             	mov    %rax,%rdx
+ 157:	48 89 05 00 00 00 00 	mov    %rax,0x0(%rip)        # 15e <__afl_setup_first+0x10d>
+ 15e:	48 8b 15 00 00 00 00 	mov    0x0(%rip),%rdx        # 165 <__afl_setup_first+0x114>
+ 165:	48 89 02             	mov    %rax,(%rdx)
+ 168:	48 89 c2             	mov    %rax,%rdx
+
+000000000000016b <__afl_forkserver>:
+ 16b:	52                   	push   %rdx
+ 16c:	52                   	push   %rdx
+ 16d:	48 c7 c2 04 00 00 00 	mov    $0x4,%rdx
+ 174:	48 8d 35 00 00 00 00 	lea    0x0(%rip),%rsi        # 17b <__afl_forkserver+0x10>
+ 17b:	48 c7 c7 c7 00 00 00 	mov    $0xc7,%rdi
+ 182:	e8 00 00 00 00       	callq  187 <__afl_forkserver+0x1c>
+ 187:	48 83 f8 04          	cmp    $0x4,%rax
+ 18b:	0f 85 98 00 00 00    	jne    229 <__afl_fork_resume>
+
+0000000000000191 <__afl_fork_wait_loop>:
+ 191:	48 c7 c2 04 00 00 00 	mov    $0x4,%rdx
+ 198:	48 8d 35 00 00 00 00 	lea    0x0(%rip),%rsi        # 19f <__afl_fork_wait_loop+0xe>
+ 19f:	48 c7 c7 c6 00 00 00 	mov    $0xc6,%rdi
+ 1a6:	e8 00 00 00 00       	callq  1ab <__afl_fork_wait_loop+0x1a>
+ 1ab:	48 83 f8 04          	cmp    $0x4,%rax
+ 1af:	0f 85 59 01 00 00    	jne    30e <__afl_die>
+ 1b5:	e8 00 00 00 00       	callq  1ba <__afl_fork_wait_loop+0x29>
+ 1ba:	48 83 f8 00          	cmp    $0x0,%rax
+ 1be:	0f 8c 4a 01 00 00    	jl     30e <__afl_die>
+ 1c4:	74 63                	je     229 <__afl_fork_resume>
+ 1c6:	89 05 00 00 00 00    	mov    %eax,0x0(%rip)        # 1cc <__afl_fork_wait_loop+0x3b>
+ 1cc:	48 c7 c2 04 00 00 00 	mov    $0x4,%rdx
+ 1d3:	48 8d 35 00 00 00 00 	lea    0x0(%rip),%rsi        # 1da <__afl_fork_wait_loop+0x49>
+ 1da:	48 c7 c7 c7 00 00 00 	mov    $0xc7,%rdi
+ 1e1:	e8 00 00 00 00       	callq  1e6 <__afl_fork_wait_loop+0x55>
+ 1e6:	48 c7 c2 00 00 00 00 	mov    $0x0,%rdx
+ 1ed:	48 8d 35 00 00 00 00 	lea    0x0(%rip),%rsi        # 1f4 <__afl_fork_wait_loop+0x63>
+ 1f4:	48 8b 3d 00 00 00 00 	mov    0x0(%rip),%rdi        # 1fb <__afl_fork_wait_loop+0x6a>
+ 1fb:	e8 00 00 00 00       	callq  200 <__afl_fork_wait_loop+0x6f>
+ 200:	48 83 f8 00          	cmp    $0x0,%rax
+ 204:	0f 8e 04 01 00 00    	jle    30e <__afl_die>
+ 20a:	48 c7 c2 04 00 00 00 	mov    $0x4,%rdx
+ 211:	48 8d 35 00 00 00 00 	lea    0x0(%rip),%rsi        # 218 <__afl_fork_wait_loop+0x87>
+ 218:	48 c7 c7 c7 00 00 00 	mov    $0xc7,%rdi
+ 21f:	e8 00 00 00 00       	callq  224 <__afl_fork_wait_loop+0x93>
+ 224:	e9 68 ff ff ff       	jmpq   191 <__afl_fork_wait_loop>
+
+0000000000000229 <__afl_fork_resume>:
+ 229:	48 c7 c7 c6 00 00 00 	mov    $0xc6,%rdi
+ 230:	e8 00 00 00 00       	callq  235 <__afl_fork_resume+0xc>
+ 235:	48 c7 c7 c7 00 00 00 	mov    $0xc7,%rdi
+ 23c:	e8 00 00 00 00       	callq  241 <__afl_fork_resume+0x18>
+ 241:	5a                   	pop    %rdx
+ 242:	5a                   	pop    %rdx
+ 243:	4c 89 e4             	mov    %r12,%rsp
+ 246:	41 5c                	pop    %r12
+ 248:	48 8b 04 24          	mov    (%rsp),%rax
+ 24c:	48 8b 4c 24 08       	mov    0x8(%rsp),%rcx
+ 251:	48 8b 7c 24 10       	mov    0x10(%rsp),%rdi
+ 256:	48 8b 74 24 20       	mov    0x20(%rsp),%rsi
+ 25b:	4c 8b 44 24 28       	mov    0x28(%rsp),%r8
+ 260:	4c 8b 4c 24 30       	mov    0x30(%rsp),%r9
+ 265:	4c 8b 54 24 38       	mov    0x38(%rsp),%r10
+ 26a:	4c 8b 5c 24 40       	mov    0x40(%rsp),%r11
+ 26f:	f3 0f 7e 44 24 60    	movq   0x60(%rsp),%xmm0
+ 275:	f3 0f 7e 4c 24 70    	movq   0x70(%rsp),%xmm1
+ 27b:	f3 0f 7e 94 24 80 00 	movq   0x80(%rsp),%xmm2
+ 282:	00 00 
+ 284:	f3 0f 7e 9c 24 90 00 	movq   0x90(%rsp),%xmm3
+ 28b:	00 00 
+ 28d:	f3 0f 7e a4 24 a0 00 	movq   0xa0(%rsp),%xmm4
+ 294:	00 00 
+ 296:	f3 0f 7e ac 24 b0 00 	movq   0xb0(%rsp),%xmm5
+ 29d:	00 00 
+ 29f:	f3 0f 7e b4 24 c0 00 	movq   0xc0(%rsp),%xmm6
+ 2a6:	00 00 
+ 2a8:	f3 0f 7e bc 24 d0 00 	movq   0xd0(%rsp),%xmm7
+ 2af:	00 00 
+ 2b1:	f3 44 0f 7e 84 24 e0 	movq   0xe0(%rsp),%xmm8
+ 2b8:	00 00 00 
+ 2bb:	f3 44 0f 7e 8c 24 f0 	movq   0xf0(%rsp),%xmm9
+ 2c2:	00 00 00 
+ 2c5:	f3 44 0f 7e 94 24 00 	movq   0x100(%rsp),%xmm10
+ 2cc:	01 00 00 
+ 2cf:	f3 44 0f 7e 9c 24 10 	movq   0x110(%rsp),%xmm11
+ 2d6:	01 00 00 
+ 2d9:	f3 44 0f 7e a4 24 20 	movq   0x120(%rsp),%xmm12
+ 2e0:	01 00 00 
+ 2e3:	f3 44 0f 7e ac 24 30 	movq   0x130(%rsp),%xmm13
+ 2ea:	01 00 00 
+ 2ed:	f3 44 0f 7e b4 24 40 	movq   0x140(%rsp),%xmm14
+ 2f4:	01 00 00 
+ 2f7:	f3 44 0f 7e bc 24 50 	movq   0x150(%rsp),%xmm15
+ 2fe:	01 00 00 
+ 301:	48 8d a4 24 60 01 00 	lea    0x160(%rsp),%rsp
+ 308:	00 
+ 309:	e9 02 fd ff ff       	jmpq   10 <__afl_store>
+
+000000000000030e <__afl_die>:
+ 30e:	48 31 c0             	xor    %rax,%rax
+ 311:	e8 00 00 00 00       	callq  316 <__afl_setup_abort>
+
+0000000000000316 <__afl_setup_abort>:
+ 316:	fe 05 00 00 00 00    	incb   0x0(%rip)        # 31c <__afl_setup_abort+0x6>
+ 31c:	4c 89 e4             	mov    %r12,%rsp
+ 31f:	41 5c                	pop    %r12
+ 321:	48 8b 04 24          	mov    (%rsp),%rax
+ 325:	48 8b 4c 24 08       	mov    0x8(%rsp),%rcx
+ 32a:	48 8b 7c 24 10       	mov    0x10(%rsp),%rdi
+ 32f:	48 8b 74 24 20       	mov    0x20(%rsp),%rsi
+ 334:	4c 8b 44 24 28       	mov    0x28(%rsp),%r8
+ 339:	4c 8b 4c 24 30       	mov    0x30(%rsp),%r9
+ 33e:	4c 8b 54 24 38       	mov    0x38(%rsp),%r10
+ 343:	4c 8b 5c 24 40       	mov    0x40(%rsp),%r11
+ 348:	f3 0f 7e 44 24 60    	movq   0x60(%rsp),%xmm0
+ 34e:	f3 0f 7e 4c 24 70    	movq   0x70(%rsp),%xmm1
+ 354:	f3 0f 7e 94 24 80 00 	movq   0x80(%rsp),%xmm2
+ 35b:	00 00 
+ 35d:	f3 0f 7e 9c 24 90 00 	movq   0x90(%rsp),%xmm3
+ 364:	00 00 
+ 366:	f3 0f 7e a4 24 a0 00 	movq   0xa0(%rsp),%xmm4
+ 36d:	00 00 
+ 36f:	f3 0f 7e ac 24 b0 00 	movq   0xb0(%rsp),%xmm5
+ 376:	00 00 
+ 378:	f3 0f 7e b4 24 c0 00 	movq   0xc0(%rsp),%xmm6
+ 37f:	00 00 
+ 381:	f3 0f 7e bc 24 d0 00 	movq   0xd0(%rsp),%xmm7
+ 388:	00 00 
+ 38a:	f3 44 0f 7e 84 24 e0 	movq   0xe0(%rsp),%xmm8
+ 391:	00 00 00 
+ 394:	f3 44 0f 7e 8c 24 f0 	movq   0xf0(%rsp),%xmm9
+ 39b:	00 00 00 
+ 39e:	f3 44 0f 7e 94 24 00 	movq   0x100(%rsp),%xmm10
+ 3a5:	01 00 00 
+ 3a8:	f3 44 0f 7e 9c 24 10 	movq   0x110(%rsp),%xmm11
+ 3af:	01 00 00 
+ 3b2:	f3 44 0f 7e a4 24 20 	movq   0x120(%rsp),%xmm12
+ 3b9:	01 00 00 
+ 3bc:	f3 44 0f 7e ac 24 30 	movq   0x130(%rsp),%xmm13
+ 3c3:	01 00 00 
+ 3c6:	f3 44 0f 7e b4 24 40 	movq   0x140(%rsp),%xmm14
+ 3cd:	01 00 00 
+ 3d0:	f3 44 0f 7e bc 24 50 	movq   0x150(%rsp),%xmm15
+ 3d7:	01 00 00 
+ 3da:	48 8d a4 24 60 01 00 	lea    0x160(%rsp),%rsp
+ 3e1:	00 
+ 3e2:	e9 41 fc ff ff       	jmpq   28 <__afl_return>
+
+00000000000003e7 <.AFL_SHM_ENV>:
+ 3e7:	5f                   	pop    %rdi
+ 3e8:	5f                   	pop    %rdi
+ 3e9:	41                   	rex.B
+ 3ea:	46                   	rex.RX
+ 3eb:	4c 5f                	rex.WR pop %rdi
+ 3ed:	53                   	push   %rbx
+ 3ee:	48                   	rex.W
+ 3ef:	4d 5f                	rex.WRB pop %r15
+ 3f1:	49                   	rex.WB
+ 3f2:	44                   	rex.R
+	...
+
+Disassembly of section .text.startup:
+
+0000000000000000 <main>:
+   0:	48 8d a4 24 68 ff ff 	lea    -0x98(%rsp),%rsp
+   7:	ff 
+   8:	48 89 14 24          	mov    %rdx,(%rsp)
+   c:	48 89 4c 24 08       	mov    %rcx,0x8(%rsp)
+  11:	48 89 44 24 10       	mov    %rax,0x10(%rsp)
+  16:	48 c7 c1 b3 22 00 00 	mov    $0x22b3,%rcx
+  1d:	e8 00 00 00 00       	callq  22 <main+0x22>
+  22:	48 8b 44 24 10       	mov    0x10(%rsp),%rax
+  27:	48 8b 4c 24 08       	mov    0x8(%rsp),%rcx
+  2c:	48 8b 14 24          	mov    (%rsp),%rdx
+  30:	48 8d a4 24 98 00 00 	lea    0x98(%rsp),%rsp
+  37:	00 
+  38:	48 83 ec 18          	sub    $0x18,%rsp
+  3c:	31 ff                	xor    %edi,%edi
+  3e:	ba 08 00 00 00       	mov    $0x8,%edx
+  43:	48 89 e6             	mov    %rsp,%rsi
+  46:	64 48 8b 04 25 28 00 	mov    %fs:0x28,%rax
+  4d:	00 00 
+  4f:	48 89 44 24 08       	mov    %rax,0x8(%rsp)
+  54:	31 c0                	xor    %eax,%eax
+  56:	e8 00 00 00 00       	callq  5b <main+0x5b>
+  5b:	48 85 c0             	test   %rax,%rax
+  5e:	0f 8e 23 01 00 00    	jle    187 <main+0x187>
+  64:	48 8d a4 24 68 ff ff 	lea    -0x98(%rsp),%rsp
+  6b:	ff 
+  6c:	48 89 14 24          	mov    %rdx,(%rsp)
+  70:	48 89 4c 24 08       	mov    %rcx,0x8(%rsp)
+  75:	48 89 44 24 10       	mov    %rax,0x10(%rsp)
+  7a:	48 c7 c1 30 a9 00 00 	mov    $0xa930,%rcx
+  81:	e8 00 00 00 00       	callq  86 <main+0x86>
+  86:	48 8b 44 24 10       	mov    0x10(%rsp),%rax
+  8b:	48 8b 4c 24 08       	mov    0x8(%rsp),%rcx
+  90:	48 8b 14 24          	mov    (%rsp),%rdx
+  94:	48 8d a4 24 98 00 00 	lea    0x98(%rsp),%rsp
+  9b:	00 
+  9c:	80 3c 24 30          	cmpb   $0x30,(%rsp)
+  a0:	0f 84 99 00 00 00    	je     13f <main+0x13f>
+  a6:	66 90                	xchg   %ax,%ax
+  a8:	48 8d a4 24 68 ff ff 	lea    -0x98(%rsp),%rsp
+  af:	ff 
+  b0:	48 89 14 24          	mov    %rdx,(%rsp)
+  b4:	48 89 4c 24 08       	mov    %rcx,0x8(%rsp)
+  b9:	48 89 44 24 10       	mov    %rax,0x10(%rsp)
+  be:	48 c7 c1 1b ac 00 00 	mov    $0xac1b,%rcx
+  c5:	e8 00 00 00 00       	callq  ca <main+0xca>
+  ca:	48 8b 44 24 10       	mov    0x10(%rsp),%rax
+  cf:	48 8b 4c 24 08       	mov    0x8(%rsp),%rcx
+  d4:	48 8b 14 24          	mov    (%rsp),%rdx
+  d8:	48 8d a4 24 98 00 00 	lea    0x98(%rsp),%rsp
+  df:	00 
+  e0:	bf 00 00 00 00       	mov    $0x0,%edi
+  e5:	e8 00 00 00 00       	callq  ea <main+0xea>
+  ea:	48 89 e2             	mov    %rsp,%rdx
+  ed:	be 00 00 00 00       	mov    $0x0,%esi
+  f2:	bf 01 00 00 00       	mov    $0x1,%edi
+  f7:	31 c0                	xor    %eax,%eax
+  f9:	e8 00 00 00 00       	callq  fe <main+0xfe>
+  fe:	66 90                	xchg   %ax,%ax
+ 100:	48 8d a4 24 68 ff ff 	lea    -0x98(%rsp),%rsp
+ 107:	ff 
+ 108:	48 89 14 24          	mov    %rdx,(%rsp)
+ 10c:	48 89 4c 24 08       	mov    %rcx,0x8(%rsp)
+ 111:	48 89 44 24 10       	mov    %rax,0x10(%rsp)
+ 116:	48 c7 c1 dd 17 00 00 	mov    $0x17dd,%rcx
+ 11d:	e8 00 00 00 00       	callq  122 <main+0x122>
+ 122:	48 8b 44 24 10       	mov    0x10(%rsp),%rax
+ 127:	48 8b 4c 24 08       	mov    0x8(%rsp),%rcx
+ 12c:	48 8b 14 24          	mov    (%rsp),%rdx
+ 130:	48 8d a4 24 98 00 00 	lea    0x98(%rsp),%rsp
+ 137:	00 
+ 138:	31 ff                	xor    %edi,%edi
+ 13a:	e8 00 00 00 00       	callq  13f <main+0x13f>
+ 13f:	90                   	nop
+ 140:	48 8d a4 24 68 ff ff 	lea    -0x98(%rsp),%rsp
+ 147:	ff 
+ 148:	48 89 14 24          	mov    %rdx,(%rsp)
+ 14c:	48 89 4c 24 08       	mov    %rcx,0x8(%rsp)
+ 151:	48 89 44 24 10       	mov    %rax,0x10(%rsp)
+ 156:	48 c7 c1 64 f2 00 00 	mov    $0xf264,%rcx
+ 15d:	e8 00 00 00 00       	callq  162 <main+0x162>
+ 162:	48 8b 44 24 10       	mov    0x10(%rsp),%rax
+ 167:	48 8b 4c 24 08       	mov    0x8(%rsp),%rcx
+ 16c:	48 8b 14 24          	mov    (%rsp),%rdx
+ 170:	48 8d a4 24 98 00 00 	lea    0x98(%rsp),%rsp
+ 177:	00 
+ 178:	bf 00 00 00 00       	mov    $0x0,%edi
+ 17d:	e8 00 00 00 00       	callq  182 <main+0x182>
+ 182:	e9 77 ff ff ff       	jmpq   fe <main+0xfe>
+ 187:	90                   	nop
+ 188:	48 8d a4 24 68 ff ff 	lea    -0x98(%rsp),%rsp
+ 18f:	ff 
+ 190:	48 89 14 24          	mov    %rdx,(%rsp)
+ 194:	48 89 4c 24 08       	mov    %rcx,0x8(%rsp)
+ 199:	48 89 44 24 10       	mov    %rax,0x10(%rsp)
+ 19e:	48 c7 c1 f5 74 00 00 	mov    $0x74f5,%rcx
+ 1a5:	e8 00 00 00 00       	callq  1aa <main+0x1aa>
+ 1aa:	48 8b 44 24 10       	mov    0x10(%rsp),%rax
+ 1af:	48 8b 4c 24 08       	mov    0x8(%rsp),%rcx
+ 1b4:	48 8b 14 24          	mov    (%rsp),%rdx
+ 1b8:	48 8d a4 24 98 00 00 	lea    0x98(%rsp),%rsp
+ 1bf:	00 
+ 1c0:	bf 00 00 00 00       	mov    $0x0,%edi
+ 1c5:	e8 00 00 00 00       	callq  1ca <main+0x1ca>
+ 1ca:	bf 01 00 00 00       	mov    $0x1,%edi
+ 1cf:	e8 00 00 00 00       	callq  1d4 <__afl_fork_wait_loop+0x43>

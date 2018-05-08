@@ -1,3 +1,4 @@
+
 /*
    american fuzzy lop - wrapper for GNU as
    ---------------------------------------
@@ -28,6 +29,8 @@
 
  */
 
+//这部分代码实现的是对汇编代码的处理，并且在分指出插入桩代码，最终调用as进行汇编
+
 #define AFL_MAIN
 
 #include "config.h"
@@ -51,6 +54,7 @@
 static u8** as_params;          /* Parameters passed to the real 'as'   */
 
 static u8*  input_file;         /* Originally specified input file      */
+static u8*  mid_file;
 static u8*  modified_file;      /* Instrumented file for the real 'as'  */
 
 static u8   be_quiet,           /* Quiet mode (no stderr output)        */
@@ -198,12 +202,14 @@ static void edit_params(int argc, char** argv) {
 
     if (strncmp(input_file, tmp_dir, strlen(tmp_dir)) &&
         strncmp(input_file, "/var/tmp/", 9) &&
-        strncmp(input_file, "/tmp/", 5)) pass_thru = 1;
+        strncmp(input_file, "/tmp/", 5)) pass_thru = 0;
 
   }
 
   modified_file = alloc_printf("%s/.afl-%u-%u.s", tmp_dir, getpid(),
                                (u32)time(NULL));
+  mid_file = alloc_printf("%s/.afl-%u-%u.s_mid", tmp_dir, getpid(),
+                          (u32)time(NULL));
 
 wrap_things_up:
 
@@ -211,6 +217,85 @@ wrap_things_up:
   as_params[as_par_cnt]   = NULL;
 
 }
+
+static void mod_cmp(void) {
+
+  static u8 line[MAX_LINE];
+
+  FILE* inf;
+  FILE* outf;
+  s32 outfd;
+
+
+//!!guyguy!! input_file是原始的待编译的文件；
+// modified_file是插装后的文件
+
+
+  if (input_file) {
+
+    inf = fopen(input_file, "r");
+    if (!inf) PFATAL("Unable to read '%s'", input_file);
+
+  } else inf = stdin;
+
+  outfd = open(mid_file, O_WRONLY | O_EXCL | O_CREAT, 0600);
+
+  if (outfd < 0) PFATAL("Unable to write to '%s'", mid_file);
+
+  outf = fdopen(outfd, "w");
+
+  if (!outf) PFATAL("fdopen() failed");
+
+  while (fgets(line, MAX_LINE, inf)) {
+
+    //!!guy!!下面将cmp指令进行修改
+
+    if (line[0] == '\t') {
+      if (line[1] == 'c' && line[2] == 'm' && line[3] == 'p' &&line[4] == 'l') {
+        //对CMP指令进行修改
+        printf("this is the line to be modified: %s", line);
+        char imm_buf[1024] = {0};
+        char reg_buf[1024] = {0};
+        //下面是处理立即数与寄存器值作比较的情况
+        if(line[6] == '$'){
+          int index_line = 7,index_imm = 0,index_reg = 0;
+          while(line[index_line] != ',')
+          {
+            imm_buf[index_imm] = line[index_line];
+            index_imm++;
+            index_line++;
+          }
+          imm_buf[index_imm] = '\0';
+          int imm = atoi(imm_buf);
+          u_int8_t *imm_byte = &imm;
+          u_int8_t imm_1byte = *imm_byte++;
+          u_int8_t imm_2byte = *imm_byte++;
+          u_int8_t imm_3byte = *imm_byte++;
+          u_int8_t imm_4byte = *imm_byte;
+          printf("%s",imm_buf);
+
+          while(line[index_line] == ' ' || line[index_line] == '\t' || line[index_line] == ',')
+            index_line++;
+          while(line[index_line] != '\n')
+          {
+            reg_buf[index_reg] = line[index_line];
+            index_reg++;
+            index_line++;
+          }
+          reg_buf[index_reg] = '\0';
+          printf("%s",reg_buf);
+        }
+      }
+    }
+    fputs(line, outf);
+
+  }
+
+
+  if (input_file) fclose(inf);
+  fclose(outf);
+}
+
 
 
 /* Process input file, generate modified_file. Insert instrumentation in all
@@ -234,9 +319,14 @@ static void add_instrumentation(void) {
 
 #endif /* __APPLE__ */
 
-  if (input_file) {
 
-    inf = fopen(input_file, "r");
+//!!guyguy!! input_file是原始的待编译的文件；
+// modified_file是插装后的文件
+
+
+  if (mid_file) {
+
+    inf = fopen(mid_file, "r");
     if (!inf) PFATAL("Unable to read '%s'", input_file);
 
   } else inf = stdin;
@@ -247,7 +337,7 @@ static void add_instrumentation(void) {
 
   outf = fdopen(outfd, "w");
 
-  if (!outf) PFATAL("fdopen() failed");  
+  if (!outf) PFATAL("fdopen() failed");
 
   while (fgets(line, MAX_LINE, inf)) {
 
@@ -259,6 +349,8 @@ static void add_instrumentation(void) {
     if (!pass_thru && !skip_intel && !skip_app && !skip_csect && instr_ok &&
         instrument_next && line[0] == '\t' && isalpha(line[1])) {
 
+
+//具体的插装操作
       fprintf(outf, use_64bit ? trampoline_fmt_64 : trampoline_fmt_32,
               R(MAP_SIZE));
 
@@ -360,11 +452,12 @@ static void add_instrumentation(void) {
     /* Conditional branch instruction (jnz, etc). We append the instrumentation
        right after the branch (to instrument the not-taken path) and at the
        branch destination label (handled later on). */
+      //!!guy!!在条件跳转指令后面进行插装
 
     if (line[0] == '\t') {
 
       if (line[1] == 'j' && line[2] != 'm' && R(100) < inst_ratio) {
-
+        //具体进行插装的函数
         fprintf(outf, use_64bit ? trampoline_fmt_64 : trampoline_fmt_32,
                 R(MAP_SIZE));
 
@@ -498,7 +591,7 @@ int main(int argc, char** argv) {
     exit(1);
 
   }
-
+    //使用编译时时间作为种子，已提供后面的随机数生成
   gettimeofday(&tv, &tz);
 
   rand_seed = tv.tv_sec ^ tv.tv_usec ^ getpid();
@@ -528,7 +621,12 @@ int main(int argc, char** argv) {
     inst_ratio /= 3;
   }
 
-  if (!just_version) add_instrumentation();
+//从这里进入主要的插装过程
+  if (!just_version)
+  {
+    mod_cmp();
+    add_instrumentation();
+  }
 
   if (!(pid = fork())) {
 
