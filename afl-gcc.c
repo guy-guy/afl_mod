@@ -269,7 +269,6 @@ static void edit_params(u32 argc, char** argv) {
 
 #endif
 
-    cc_params[cc_par_cnt++] = "-O3";
     cc_params[cc_par_cnt++] = "-funroll-loops";
 
     /* Two indicators that you're building for fuzzing; one of them is

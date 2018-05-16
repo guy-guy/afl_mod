@@ -95,7 +95,7 @@ static u8   use_64bit = 0;
 static void instr_movl_mod(char* instr_movl_l, char* reg_l)
 {
   int flag = strstr(reg_l,"(%rsp)") - reg_l;
-  if(flag != NULL)
+  if(strstr(reg_l,"(%rsp)") != NULL)
   {
     int value = 0;
     char tmp_reg[10];
@@ -104,7 +104,7 @@ static void instr_movl_mod(char* instr_movl_l, char* reg_l)
       sscanf(reg_l,"%d%s",&value,tmp_reg);
       sprintf(reg_l,"%d%s",value+8,tmp_reg);
     }
-    if(flag == 0)
+    else
     {
       sscanf(reg_l,"%s",tmp_reg);
       sprintf(reg_l,"%d%s",8,tmp_reg);
@@ -291,7 +291,7 @@ static void mod_cmp(void) {
   FILE* inf;
   FILE* outf;
   s32 outfd;
-  int random_flag = 1000;
+  int random_flag = 12580;
 
 //!!guyguy!! input_file是原始的待编译的文件；
 // modified_file是插装后的文件
@@ -318,8 +318,9 @@ static void mod_cmp(void) {
 
     if (line[0] == '\t') {
       if (line[1] == 'c' && line[2] == 'm' && line[3] == 'p' &&line[4] == 'l') {
-        //对CMP指令进行修改
-        printf("this is the line to be modified: %s", line);
+        //对cmpl指令进行修改
+        //！！现在存在的问题：如果是cmpq的话怎么处理合适
+        //printf("this is the line to be modified: %s", line);
 
         char imm_buf[1024] = {0};//用于保存立即数的值
         char reg_buf[1024] = {0};//用于保存寄存器的值
@@ -337,12 +338,17 @@ static void mod_cmp(void) {
           }
           imm_buf[index_imm] = '\0';
           int imm = atoi(imm_buf);
+          if(imm < (1<<16) && imm > -(1<<16))
+          {
+            fputs(line,outf);
+            continue;
+          }
           u_int8_t *imm_byte = &imm;
           u_int8_t imm_1byte = *imm_byte++;
           u_int8_t imm_2byte = *imm_byte++;
           u_int8_t imm_3byte = *imm_byte++;
           u_int8_t imm_4byte = *imm_byte;
-          printf("%s",imm_buf);
+         // printf("%s",imm_buf);
 
           while(line[index_line] == ' ' || line[index_line] == '\t' || line[index_line] == ',')
           {
@@ -355,7 +361,7 @@ static void mod_cmp(void) {
             index_line++;
           }
           reg_buf[index_reg] = '\0';
-          printf("%s",reg_buf);
+          //printf("%s",reg_buf);
           //接下来根据下一条执行
           u8 line_cmp[MAX_LINE] = {0};
           for(int i = 0; i < MAX_LINE; i++)
@@ -363,6 +369,7 @@ static void mod_cmp(void) {
             line_cmp[i] = line[i];
           }
           fgets(line, MAX_LINE, inf);
+          printf("%s%s",line_cmp,line);
 
           //如果下一条指令不是je或者jne则不做处理
           if(line[0] != '\t' || line[1] != 'j')
@@ -375,7 +382,6 @@ static void mod_cmp(void) {
           //如果下一指令为je
           else if(line[0] == '\t' && line[1] == 'j' && line[2] == 'e')
           {
-            printf("%s",line);
             if(line[3] == '\t')
             {
               index_line = 4;
@@ -427,7 +433,8 @@ static void mod_cmp(void) {
               fputs(line,outf);
             }
 
-
+            //找到je跳转目标并且对目标进行相应的修改
+            //！！现在存在的问题，如果在这个过程中还存在cmpl指令怎么处理，一种较为丑陋的方法是不断迭代直到不存在cmpl指令
             while(fgets(line, MAX_LINE, inf))
             {
                if(strcmp(line,e_flag_buf) == 0)
@@ -461,7 +468,58 @@ static void mod_cmp(void) {
           //如果下一指令为jne
           else if(line[0] == '\t' && line[1] == 'j' && line[2] == 'n' && line[3] == 'e')
           {
+            if(line[4] == '\t')
+            {
+              index_line = 5;
+              index_flag = 0;
+              while(line[index_line] != '\n')
+              {
+                ne_flag_buf[index_flag] = line[index_line];
+                index_flag++;
+                index_line++;
+              }
+              ne_flag_buf[index_flag] = ':';
+              index_flag++;
+              ne_flag_buf[index_flag] = '\n';
+            }
 
+            fputs(instr_push_eax,outf);
+            instr_movl_mod(instr_movl,reg_buf);
+            fputs(instr_movl,outf);
+            instr_cmpb_mod(instr_cmpb,imm_1byte);
+            fputs(instr_cmpb,outf);
+            fputs(line,outf);
+
+            fputs(instr_right_shift,outf);
+            instr_cmpb_mod(instr_cmpb,imm_2byte);
+            fputs(instr_cmpb,outf);
+            instr_jne_mod(instr_jnz,ne_flag_buf);
+            fputs(instr_jnz,outf);
+
+            fputs(instr_right_shift,outf);
+            instr_cmpb_mod(instr_cmpb,imm_3byte);
+            fputs(instr_cmpb,outf);
+            instr_jne_mod(instr_jnz,ne_flag_buf);
+            fputs(instr_jnz,outf);
+
+            fputs(instr_right_shift,outf);
+            instr_cmpb_mod(instr_cmpb,imm_4byte);
+            fputs(instr_cmpb,outf);
+            instr_jne_mod(instr_jnz,ne_flag_buf);
+            fputs(instr_jnz,outf);
+
+            fputs(instr_pop_eax,outf);
+
+            while(fgets(line, MAX_LINE, inf)) {
+              if (strcmp(line, ne_flag_buf) == 0) {
+                fputs(line, outf);
+                fputs(instr_pop_eax, outf);
+                fgets(line, MAX_LINE, inf);
+                break;
+              } else {
+                fputs(line, outf);
+              }
+            }
           }
         }
       }
