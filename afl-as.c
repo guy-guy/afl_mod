@@ -80,7 +80,8 @@ static char instr_jnz[MAX_LINE];
 
 #ifdef __x86_64__
 
-static u8   use_64bit = 1;
+//static u8   use_64bit = 1;
+static u8   use_64bit = 0;
 
 #else
 
@@ -873,7 +874,7 @@ int main(int argc, char** argv) {
 
   if (waitpid(pid, &status, 0) <= 0) PFATAL("waitpid() failed");
 
-  if (!getenv("AFL_KEEP_ASSEMBLY")) unlink(modified_file);
+//  if (!getenv("AFL_KEEP_ASSEMBLY")) unlink(modified_file);
 
   exit(WEXITSTATUS(status));
 

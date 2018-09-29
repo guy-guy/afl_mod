@@ -179,7 +179,8 @@ static const u8* main_payload_32 =
 #ifndef COVERAGE_ONLY
   "  movl __afl_prev_loc, %edi\n"
   "  xorl %ecx, %edi\n"
-  "  shrl $1, %ecx\n"
+  "  movb %cl, %ch\n"
+  "  movb __afl_prev_loc, %cl\n"
   "  movl %ecx, __afl_prev_loc\n"
 #else
   "  movl %ecx, %edi\n"
