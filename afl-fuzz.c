@@ -1381,20 +1381,20 @@ static void setup_post(void) {
   u32 tlen = 6;
 
   if (!fn) return;
-
-  ACTF("Loading postprocessor from '%s'...", fn);
-
-  dh = dlopen(fn, RTLD_NOW);
-  if (!dh) FATAL("%s", dlerror());
-
-  post_handler = dlsym(dh, "afl_postprocess");
-  if (!post_handler) FATAL("Symbol 'afl_postprocess' not found.");
-
-  /* Do a quick test. It's better to segfault now than later =) */
-
-  post_handler("hello", &tlen);
-
-  OKF("Postprocessor installed successfully.");
+//
+//  ACTF("Loading postprocessor from '%s'...", fn);
+//
+//  dh = dlopen(fn, RTLD_NOW);
+//  if (!dh) FATAL("%s", dlerror());
+//
+//  post_handler = dlsym(dh, "afl_postprocess");
+//  if (!post_handler) FATAL("Symbol 'afl_postprocess' not found.");
+//
+//  /* Do a quick test. It's better to segfault now than later =) */
+//
+//  post_handler("hello", &tlen);
+//
+//  OKF("Postprocessor installed successfully.");
 
 }
 
@@ -4997,7 +4997,7 @@ static u8 fuzz_one(char** argv) {
 
   /* ！！！Map the test case into memory. */
 
-  fd = open(queue_cur->fname, O_RDONLY);
+  fd = open(queue_cur->fname, O_RDONLY | O_NONBLOCK);
 
   if (fd < 0) PFATAL("Unable to open '%s'", queue_cur->fname);
 
@@ -5049,10 +5049,10 @@ static u8 fuzz_one(char** argv) {
 
   if (!dumb_mode && !queue_cur->trim_done) {
 
-    u8 res = trim_case(argv, queue_cur, in_buf);
-
-    if (res == FAULT_ERROR)
-      FATAL("Unable to execute target application");
+//    u8 res = trim_case(argv, queue_cur, in_buf);
+//
+//    if (res == FAULT_ERROR)
+//      FATAL("Unable to execute target application");
 
     if (stop_soon) {
       cur_skipped_paths++;
@@ -7651,12 +7651,12 @@ static char** get_qemu_argv(u8* own_loc, char** argv, int argc) {
 
   } else ck_free(own_copy);
 
-  if (!access(BIN_PATH "/afl-qemu-trace", X_OK)) {
-
-    target_path = new_argv[0] = ck_strdup(BIN_PATH "/afl-qemu-trace");
-    return new_argv;
-
-  }
+//  if (!access(BIN_PATH "/afl-qemu-trace", X_OK)) {
+//
+//    target_path = new_argv[0] = ck_strdup(BIN_PATH "/afl-qemu-trace");
+//    return new_argv;
+//
+//  }
 
   SAYF("\n" cLRD "[-] " cRST
        "Oops, unable to find the 'afl-qemu-trace' binary. The binary must be built\n"
@@ -7720,7 +7720,7 @@ int main(int argc, char** argv) {
 
   SAYF(cCYA "afl-fuzz " cBRI VERSION cRST " by <lcamtuf@google.com>\n");
 
-  doc_path = access(DOC_PATH, F_OK) ? "docs" : DOC_PATH;
+  doc_path = "docs";
 
   gettimeofday(&tv, &tz);
   srandom(tv.tv_sec ^ tv.tv_usec ^ getpid());
@@ -7953,7 +7953,7 @@ int main(int argc, char** argv) {
   check_crash_handling();
   check_cpu_governor();
 
-  setup_post();
+  //setup_post();
   setup_shm();
   init_count_class16();
 
